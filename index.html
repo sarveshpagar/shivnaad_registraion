@@ -239,130 +239,53 @@
   </div>
 
   <script>
-    class BappaMoryaAudioEngine {
-      constructor() {
-        this.ctx = null;
-        this.isPlaying = false;
-        this.intervalId = null;
-        this.tempo = 115; 
-        this.beatIndex = 0;
+    const audioUrl = 'https://res.cloudinary.com/djbxxkpji/video/upload/v1782935015/tpmcfdezfdchivfso9nz.mp3';
+    const audio = new Audio(audioUrl);
+    audio.preload = 'auto';
+    audio.loop = true;
 
-        // Custom rhythm patterns 
-        this.dholBassPattern = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0];
-        this.tashaPattern =    [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1];
-        this.bellsPattern =    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
-      }
+    let isAudioPlaying = false;
 
-      init() {
-        if (!this.ctx) {
-          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-      }
-
-      playDholSound(time, pitch, duration, intensity) {
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(pitch, time);
-        osc.frequency.exponentialRampToValueAtTime(pitch * 0.4, time + duration);
-        gain.gain.setValueAtTime(intensity, time);
-        gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
-        osc.start(time);
-        osc.stop(time + duration);
-
-        if (pitch > 100 && Math.random() > 0.3) {
-          let noiseOsc = this.ctx.createOscillator();
-          let noiseGain = this.ctx.createGain();
-          noiseOsc.type = 'sawtooth';
-          noiseOsc.frequency.setValueAtTime(450, time);
-          noiseOsc.frequency.exponentialRampToValueAtTime(250, time + 0.1);
-          noiseGain.connect(this.ctx.destination);
-          noiseOsc.connect(noiseGain);
-          noiseGain.gain.setValueAtTime(intensity * 0.4, time);
-          noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.08);
-          noiseOsc.start(time);
-          noiseOsc.stop(time + 0.08);
-        }
-      }
-
-      playTashaFlame(time) {
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(1100 + Math.random() * 400, time);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        gain.gain.setValueAtTime(0.06, time);
-        gain.gain.exponentialRampToValueAtTime(0.005, time + 0.05);
-        osc.start(time);
-        osc.stop(time + 0.05);
-      }
-
-      playBells(time) {
-        if (!this.ctx) return;
-        let osc = this.ctx.createOscillator();
-        let gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(2800, time);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        gain.gain.setValueAtTime(0.03, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
-        osc.start(time);
-        osc.stop(time + 0.15);
-      }
-
-      play() {
-        this.init();
-        if (this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-        this.isPlaying = true;
-        const secondsPerBeat = 60.0 / this.tempo / 2;
-        let nextPlayTime = this.ctx.currentTime + 0.1;
-
-        const scheduler = () => {
-          while (nextPlayTime < this.ctx.currentTime + 0.3) {
-            this.scheduleBeat(this.beatIndex, nextPlayTime);
-            nextPlayTime += secondsPerBeat;
-            this.beatIndex = (this.beatIndex + 1) % 16;
-          }
-        };
-        this.intervalId = setInterval(scheduler, 50);
-      }
-
-      scheduleBeat(beat, time) {
-        if (this.dholBassPattern[beat] === 1) {
-          this.playDholSound(time, 130, 0.3, 0.85);
-        }
-        if (this.tashaPattern[beat] === 1) {
-          this.playTashaFlame(time);
-        }
-        if (this.bellsPattern[beat] === 1) {
-          this.playBells(time);
-        }
-      }
-
-      stop() {
-        this.isPlaying = false;
-        clearInterval(this.intervalId);
-      }
-    }
-
-    const dholEngine = new BappaMoryaAudioEngine();
-
-    function startPlayback() {
-      dholEngine.play();
+    function updateAudioIcons() {
       const playIcon = document.getElementById('playIcon');
       const pauseIcon = document.getElementById('pauseIcon');
       if (playIcon && pauseIcon) {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
+        playIcon.classList.toggle('hidden', isAudioPlaying);
+        pauseIcon.classList.toggle('hidden', !isAudioPlaying);
       }
+    }
+
+    function startPlayback() {
+      if (!isAudioPlaying) {
+        audio.play().catch(() => {
+          isAudioPlaying = false;
+          updateAudioIcons();
+        });
+        isAudioPlaying = true;
+        updateAudioIcons();
+      }
+    }
+
+    function stopPlayback() {
+      if (isAudioPlaying) {
+        audio.pause();
+        audio.currentTime = 0;
+        isAudioPlaying = false;
+        updateAudioIcons();
+      }
+    }
+
+    function togglePlayback() {
+      if (isAudioPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
+      }
+    }
+
+    const audioToggle = document.getElementById('audioToggle');
+    if (audioToggle) {
+      audioToggle.addEventListener('click', togglePlayback);
     }
 
     const autoplayHandler = function(e) {
