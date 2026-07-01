@@ -9,36 +9,196 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Yatra+One&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --saffron-night: #120400;
+      --ember: #3D0D00;
+      --vermilion: #C8391B;
+      --marigold: #F5A623;
+      --parchment: #F2D9AA;
+      --ash: #F9F2E8;
+    }
+
     body {
-      background: radial-gradient(circle, #2d1300 0%, #0f0500 100%);
+      background: var(--saffron-night);
+      color: var(--ash);
       font-family: 'Poppins', sans-serif;
       overflow-x: hidden;
     }
 
+    @keyframes drift {
+      0% { transform: translate3d(-3%, -2%, 0) scale(1); }
+      100% { transform: translate3d(3%, 2%, 0) scale(1.05); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-120%) rotate(18deg); }
+      100% { transform: translateX(140%) rotate(18deg); }
+    }
+
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(245, 166, 35, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(200, 57, 27, 0.26), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(255, 215, 140, 0.12), transparent 35%);
+      animation: drift 16s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.02), transparent 40%, rgba(255,255,255,0.03));
+      filter: blur(6px);
+      opacity: 0.7;
+    }
+
+    /* --- NEW HERO SECTION STYLES --- */
+    .hero-banner-new {
+      position: relative;
+      max-width: 54rem;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      background: radial-gradient(circle, rgba(194, 65, 12, 0.15) 0%, transparent 60%);
+      border-radius: 20px;
+    }
+
+    .hero-heading-new {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+    }
+
+    .hero-line-new {
+      display: block;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      animation: heroReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes heroReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .hero-line-new:nth-child(1) { animation-delay: 0.3s; }
+    .hero-line-new:nth-child(2) { animation-delay: 1.2s; }
+    .hero-line-new:nth-child(3) { animation-delay: 2.0s; }
+    .hero-line-new:nth-child(4) { animation-delay: 2.8s; }
+    .hero-line-new:nth-child(5) { animation-delay: 3.6s; }
+    .hero-line-new:nth-child(6) { animation-delay: 4.4s; }
+    .hero-line-new:nth-child(7) { animation-delay: 5.5s; }
+
+    /* --- PARCHMENT & CONTENT STYLES --- */
     .parchment-bg {
       background-color: #f2dec4;
       background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 0),
                         radial-gradient(rgba(0,0,0,0.08) 2px, transparent 0);
       background-size: 20px 20px;
       box-shadow: inset 0 0 60px rgba(89, 44, 11, 0.4);
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 1s ease-out both;
+      animation-delay: 6s; /* Wait for hero to finish */
+    }
+
+    .parchment-bg:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: inset 0 0 60px rgba(89, 44, 11, 0.4), 0 20px 40px rgba(0,0,0,0.22);
+    }
+
+    .parchment-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0.75rem;
+      border: 1px solid rgba(146, 64, 14, 0.16);
+      border-radius: 0.95rem;
+      pointer-events: none;
+    }
+
+    .parchment-bg::after {
+      content: '';
+      position: absolute;
+      inset: -35px;
+      background: radial-gradient(circle at top left, rgba(245, 166, 35, 0.15), transparent 44%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     .yatra-font {
       font-family: 'Yatra One', cursive;
     }
-
+    
     .cinzel-font {
       font-family: 'Cinzel Decorative', serif;
+    }
+
+    .hero-cta {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 30px rgba(194, 65, 12, 0.3);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 18px 35px rgba(194, 65, 12, 0.36);
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.25), transparent 80%);
+      transform: translateX(-140%) rotate(18deg);
+      animation: shimmer 3s linear infinite;
+    }
+
+    .feature-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      opacity: 0;
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 6.5s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      border-color: rgba(245, 166, 35, 0.35);
     }
 
     .scroll-left-cylinder {
       background: linear-gradient(to right, #5c2c0c, #c68a4c, #5c2c0c, #301300);
       box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 6s;
+      opacity: 0;
     }
 
     .scroll-right-cylinder {
       background: linear-gradient(to right, #301300, #5c2c0c, #c68a4c, #5c2c0c);
       box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+      animation: fadeUp 1s ease-out forwards;
+      animation-delay: 6s;
+      opacity: 0;
     }
 
     @keyframes float {
@@ -51,7 +211,6 @@
       animation: float 4s ease-in-out infinite;
     }
 
-    /* Smoke effect */
     .smoke {
       position: absolute;
       width: 4px;
@@ -63,33 +222,16 @@
     }
 
     @keyframes rise {
-      0% {
-        transform: translateY(100%) scale(1);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.6;
-      }
-      100% {
-        transform: translateY(-200px) scale(8);
-        opacity: 0;
-      }
-    }
-
-    /* Custom high contrast glass effects */
-    .glass-card {
-      background: rgba(30, 10, 2, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(245, 158, 11, 0.2);
+      0% { transform: translateY(100%) scale(1); opacity: 0; }
+      10% { opacity: 0.6; }
+      100% { transform: translateY(-200px) scale(8); opacity: 0; }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-amber-100 relative">
 
-  <!-- Confetti/Petals Canvas background -->
   <canvas id="petalCanvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
 
-  <!-- Sound track and Controller -->
   <div class="fixed top-2 right-2 sm:top-4 sm:right-4 z-50 flex items-center space-x-2 bg-black/80 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-amber-500/30">
     <span id="currentRhythmLabel" class="text-xs text-amber-300 font-semibold uppercase tracking-wider hidden sm:inline">Sound: "Bappa Morya"</span>
     <button id="audioToggle" class="text-amber-400 hover:text-amber-200 transition focus:outline-none">
@@ -107,7 +249,7 @@
         this.tempo = 115; 
         this.beatIndex = 0;
 
-        // Custom rhythm patterns (default: classic energetic "Bappa Morya" loop)
+        // Custom rhythm patterns 
         this.dholBassPattern = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0];
         this.tashaPattern =    [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1];
         this.bellsPattern =    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
@@ -121,20 +263,15 @@
 
       playDholSound(time, pitch, duration, intensity) {
         if (!this.ctx) return;
-        
         let osc = this.ctx.createOscillator();
         let gain = this.ctx.createGain();
-        
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(pitch, time);
         osc.frequency.exponentialRampToValueAtTime(pitch * 0.4, time + duration);
-        
         gain.gain.setValueAtTime(intensity, time);
         gain.gain.exponentialRampToValueAtTime(0.01, time + duration);
-        
         osc.start(time);
         osc.stop(time + duration);
 
@@ -146,10 +283,8 @@
           noiseOsc.frequency.exponentialRampToValueAtTime(250, time + 0.1);
           noiseGain.connect(this.ctx.destination);
           noiseOsc.connect(noiseGain);
-          
           noiseGain.gain.setValueAtTime(intensity * 0.4, time);
           noiseGain.gain.exponentialRampToValueAtTime(0.01, time + 0.08);
-          
           noiseOsc.start(time);
           noiseOsc.stop(time + 0.08);
         }
@@ -183,20 +318,13 @@
         osc.stop(time + 0.15);
       }
 
-      updateRhythm(tempo, dholBass, tasha, bells) {
-        this.tempo = tempo || this.tempo;
-        if (dholBass) this.dholBassPattern = dholBass;
-        if (tasha) this.tashaPattern = tasha;
-        if (bells) this.bellsPattern = bells;
-      }
-
       play() {
         this.init();
         if (this.ctx.state === 'suspended') {
           this.ctx.resume();
         }
         this.isPlaying = true;
-        const secondsPerBeat = 60.0 / this.tempo / 2; // eighth notes
+        const secondsPerBeat = 60.0 / this.tempo / 2;
         let nextPlayTime = this.ctx.currentTime + 0.1;
 
         const scheduler = () => {
@@ -206,12 +334,10 @@
             this.beatIndex = (this.beatIndex + 1) % 16;
           }
         };
-
         this.intervalId = setInterval(scheduler, 50);
       }
 
       scheduleBeat(beat, time) {
-        // Play scheduled beats dynamically loaded from Gemini
         if (this.dholBassPattern[beat] === 1) {
           this.playDholSound(time, 130, 0.3, 0.85);
         }
@@ -231,21 +357,18 @@
 
     const dholEngine = new BappaMoryaAudioEngine();
 
-    // Auto-play on first user interaction (browsers block AudioContext without gesture)
     function startPlayback() {
       dholEngine.play();
       const playIcon = document.getElementById('playIcon');
       const pauseIcon = document.getElementById('pauseIcon');
-      const vibeBtnText = document.getElementById('vibeBtnText');
       if (playIcon && pauseIcon) {
         playIcon.classList.add('hidden');
         pauseIcon.classList.remove('hidden');
       }
-      if (vibeBtnText) vibeBtnText.innerText = "थांबा (Pause)";
     }
 
     const autoplayHandler = function(e) {
-      if (e.target.closest('#audioToggle, #vibeButton')) return;
+      if (e.target.closest('#audioToggle')) return;
       document.removeEventListener('click', autoplayHandler);
       document.removeEventListener('touchstart', autoplayHandler);
       document.removeEventListener('keydown', autoplayHandler);
@@ -256,64 +379,76 @@
     document.addEventListener('keydown', autoplayHandler);
   </script>
 
-  <!-- Header Banner -->
   <header class="w-full text-center py-6 px-4 z-10 relative">
-    <h3 class="text-xs sm:text-sm tracking-widest text-amber-500 font-semibold uppercase cinzel-font">आगमन लोकसंस्कृतीचे | भव्य वादक भरती</h3>
-    <div class="h-[2px] w-32 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mt-2"></div>
+    <div class="hero-banner-new">
+      <h2 class="hero-heading-new yatra-font">
+        <span class="hero-line-new text-amber-500 text-2xl sm:text-4xl mb-2 drop-shadow-[0_0_15px_rgba(245,166,35,0.6)]">
+          आत्ता नवीन काय?
+        </span>
+        
+        <span class="hero-line-new text-amber-100/90 text-lg sm:text-xl font-sans font-light">नवीन फक्त ताल नाही…</span>
+        <span class="hero-line-new text-amber-100/90 text-lg sm:text-xl font-sans font-light">नवीन फक्त सादरीकरण नाही…</span>
+        
+        <span class="hero-line-new text-amber-200 text-xl sm:text-2xl mt-4 tracking-wide">नवीन आहे विचार.</span>
+        <span class="hero-line-new text-amber-200 text-xl sm:text-2xl tracking-wide">नवीन आहे संकल्पना.</span>
+        
+        <span class="hero-line-new text-amber-100/80 text-sm sm:text-base mt-2 font-sans font-light">आणि त्या संकल्पनेचा भाग बनण्याची संधी.</span>
+        
+        <span class="hero-line-new text-amber-500 text-4xl sm:text-6xl mt-6 drop-shadow-[0_0_25px_rgba(234,88,12,0.8)]">
+          यंदा शिवनादसोबत.
+        </span>
+      </h2>
+      
+      <div class="flex justify-center items-center mt-10 opacity-0 animate-[fadeUp_1s_ease-out_6s_forwards]">
+        <div class="w-24 h-[1px] bg-gradient-to-r from-transparent to-orange-500"></div>
+        <div class="mx-4 text-orange-500 text-lg">♦</div>
+        <div class="w-24 h-[1px] bg-gradient-to-l from-transparent to-orange-500"></div>
+      </div>
+    </div>
   </header>
 
-  <main class="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-center items-center py-4 relative z-10">
+  <main class="w-full max-w-4xl mx-auto px-4 flex-1 flex flex-col justify-center items-center py-2 relative z-10">
     
-    <!-- Interactive Scroll Unit -->
     <div class="w-full relative py-8 flex items-center justify-center">
       
-      <!-- The Left Scroll Cylinder Roll -->
-      <div class="absolute left-1 sm:left-6 md:left-12 top-0 bottom-0 w-3 sm:w-6 md:w-10 rounded-lg scroll-left-cylinder z-30 transition-all duration-700 shadow-2xl flex flex-col justify-between py-4">
+      <div class="absolute left-1 sm:left-6 md:left-12 top-0 bottom-0 w-3 sm:w-6 md:w-10 rounded-lg scroll-left-cylinder z-30 transition-all duration-700 flex flex-col justify-between py-4">
         <div class="w-5 sm:w-8 md:w-12 h-4 sm:h-6 bg-yellow-600 rounded-full border-t-2 border-b-2 border-yellow-300"></div>
         <div class="w-5 sm:w-8 md:w-12 h-4 sm:h-6 bg-yellow-600 rounded-full border-t-2 border-b-2 border-yellow-300"></div>
       </div>
 
-      <!-- The Parchment Content Canvas -->
-      <div class="w-[92%] sm:w-4/5 parchment-bg text-stone-900 rounded-md p-4 sm:p-6 md:p-12 relative z-20 shadow-inner border-y-8 border-stone-800 flex flex-col items-center min-h-[500px]">
+      <div class="w-[92%] sm:w-4/5 parchment-bg text-stone-900 rounded-md p-4 sm:p-6 md:p-12 relative z-20 border-y-8 border-stone-800 flex flex-col items-center min-h-[500px]">
         
-        <!-- Intricate Vintage Corners -->
         <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-amber-900/40"></div>
         <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-amber-900/40"></div>
         <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-amber-900/40"></div>
         <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-amber-900/40"></div>
 
-        <!-- Smoke/Incense particles generator placement -->
         <div id="incense-source" class="absolute bottom-6 left-6 flex flex-col items-center">
           <div class="w-2 h-2 bg-stone-700 rounded-t-full"></div>
           <div class="text-[8px] text-amber-900/50 mt-1">धूप</div>
         </div>
 
-        <!-- Devotional Icon / Ganesha Banner -->
-        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-orange-100/50 flex items-center justify-center p-2 border-4 border-amber-800/20 shadow-md mb-4 floating-ganesha">
-          <svg viewBox="0 0 100 100" class="w-full h-full text-orange-600">
-            <path fill="currentColor" d="M50,15 C45,15 35,18 35,28 C35,38 52,38 52,43 C52,47 48,48 45,46 C42,44 41,40 38,40 C35,40 34,42 36,45 C40,52 48,51 52,51 C58,51 62,47 62,40 C62,28 55,15 50,15 Z" />
-            <path fill="currentColor" d="M50,22 C52,22 55,24 55,27 C55,30 52,32 50,32 C48,32 45,30 45,27 C45,24 48,22 50,22 Z" opacity="0.8"/>
-            <path stroke="currentColor" stroke-width="2" fill="none" d="M38,28 C30,28 25,32 25,38 C25,48 35,46 32,58 C30,66 22,64 22,70 C22,76 35,76 40,70" />
-            <path stroke="currentColor" stroke-width="2" fill="none" d="M62,28 C70,28 75,32 75,38 C75,48 65,46 68,58 C70,66 78,64 78,70 C78,76 65,76 60,70" />
-            <circle cx="50" cy="27" r="2" fill="#900" />
-          </svg>
+        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-orange-100/50 flex items-center justify-center p-2 border-4 border-amber-800/20 shadow-md mb-4 mt-2 sm:mt-3 floating-ganesha">
+          <img src="image.png" alt="Ganpati photo" class="w-full h-full object-cover" />
         </div>
 
-        <!-- Brand Name Grouping - "Shivnaad" -->
-        <h1 class="text-3xl sm:text-5xl font-extrabold text-orange-800 tracking-wide yatra-font text-center drop-shadow-sm">
-          शिवनाद ढोल पथक
-        </h1>
-        <p class="text-xs sm:text-sm text-stone-700 mt-1 font-semibold tracking-widest uppercase text-center border-b border-amber-900/20 pb-2 w-3/4">
-          नाशिक • स्थापना २०१६
+        <div class="text-center space-y-4 max-w-xl">
+          <p class="mt-3 text-base sm:text-lg text-amber-900 font-semibold tracking-tight leading-relaxed yatra-font">
+            भारतीय संगीताची समृद्ध परंपरा ढोल-ताशाच्या ठेक्यातून जनमानसापर्यंत पोहोचवणारे एकच नाव…
+          </p>
+          <h1 class="text-3xl sm:text-5xl font-extrabold text-orange-800 tracking-wide yatra-font drop-shadow-sm leading-tight">
+            शिवनाद वाद्यपथक
+          </h1>
+        </div>
+        <p class="text-xs sm:text-sm text-stone-700 mt-6 font-semibold tracking-widest uppercase text-center border-b border-amber-900/20 pb-2 w-3/4 mx-auto">
+          नाशिक • स्थापना २०१५
         </p>
 
-        <!-- Dynamic Badge & Message -->
         <div class="my-6 bg-amber-900/10 px-4 py-2 rounded-lg border border-amber-950/20 text-center max-w-md">
           <span class="text-amber-900 font-bold text-sm sm:text-base tracking-wide block mb-1">नवीन सदस्य वादक नोंदणी सुरू!</span>
-          <span class="text-xs text-stone-600 block">जर आपल्यात आहे ताल आणि वाजवण्याची जिद्द, तर आजच सामील व्हा.</span>
+          <span class="text-xs text-stone-600 block">कला • परंपरा • सातत्य • नावीन्य</span>
         </div>
 
-        <!-- Launch Event & Date Details -->
         <div class="w-full max-w-md space-y-4 text-center my-2">
           <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-4 rounded-xl shadow-sm border border-amber-900/10">
             <h4 class="text-xs font-bold text-orange-700 tracking-widest uppercase mb-1">सराव प्रारंभ दिनांक</h4>
@@ -323,7 +458,6 @@
             <p class="text-[11px] text-stone-500 mt-1">आपले स्थान निश्चित करण्यासाठी आजच संपर्क साधा.</p>
           </div>
 
-          <!-- Address & Venue Details -->
           <div class="grid grid-cols-2 gap-3 text-left">
             <div class="bg-stone-100/80 p-3 rounded-lg border border-stone-200">
               <span class="text-[10px] font-bold text-amber-900 block uppercase">मुख्य कार्यालय</span>
@@ -331,47 +465,38 @@
             </div>
             <div class="bg-stone-100/80 p-3 rounded-lg border border-stone-200">
               <span class="text-[10px] font-bold text-amber-900 block uppercase">संपर्क व्हॉट्सॲप</span>
-              <span class="text-xs font-semibold text-stone-800 block mt-0.5">+91 80 87 87 1717</span>
+              <span class="text-xs font-semibold text-stone-800 block mt-0.5">+91 7218386900</span>
             </div>
           </div>
         </div>
 
-        <!-- Call to Actions -->
         <div class="mt-8 w-full max-w-sm flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 justify-center">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfnH9X_k51QsVFOksz7YZciyqS7nr7ppDyN3sGHhg9eBZcm8Q/viewform?usp=dialog" target="_blank" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm">
-            <!-- <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.528 2.01 14.069.993 11.473.993c-5.443 0-9.866 4.369-9.87 9.796-.001 1.77.461 3.5 1.338 5.025l-1.01 3.686 3.796-.987zm11.567-7.618c-.3-.15-1.77-.874-2.043-.973-.272-.1-.471-.15-.669.15-.198.299-.769.973-.942 1.171-.173.199-.347.224-.647.075-.3-.15-1.266-.467-2.41-1.484-.89-.791-1.49-1.77-1.664-2.07-.173-.299-.018-.46.131-.609.135-.133.3-.349.449-.523.149-.174.199-.299.299-.498.099-.2.05-.374-.025-.523-.075-.15-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.77-.724 2.018-1.389.248-.665.248-1.237.173-1.388-.074-.15-.272-.25-.572-.401z"/></svg> -->
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfnH9X_k51QsVFOksz7YZciyqS7nr7ppDyN3sGHhg9eBZcm8Q/viewform?usp=dialog" target="_blank" class="hero-cta bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-3 rounded-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm">
             <span>नोंदणी करा</span>
           </a>
-          <!-- <button id="vibeButton" class="border-2 border-orange-800 text-orange-950 font-bold px-6 py-3 rounded-xl hover:bg-orange-800 hover:text-white transition-all text-sm flex items-center justify-center space-x-2">
-            🥁 <span id="vibeBtnText">फील द ढोल!</span>
-          </button> -->
         </div>
 
       </div>
 
-      <!-- The Right Scroll Cylinder Roll -->
-      <div class="absolute right-1 sm:right-6 md:right-12 top-0 bottom-0 w-3 sm:w-6 md:w-10 rounded-lg scroll-right-cylinder z-30 transition-all duration-700 shadow-2xl flex flex-col justify-between py-4">
+      <div class="absolute right-1 sm:right-6 md:right-12 top-0 bottom-0 w-3 sm:w-6 md:w-10 rounded-lg scroll-right-cylinder z-30 transition-all duration-700 flex flex-col justify-between py-4">
         <div class="w-5 sm:w-8 md:w-12 h-4 sm:h-6 bg-yellow-600 rounded-full border-t-2 border-b-2 border-yellow-300"></div>
         <div class="w-5 sm:w-8 md:w-12 h-4 sm:h-6 bg-yellow-600 rounded-full border-t-2 border-b-2 border-yellow-300"></div>
       </div>
 
     </div>
 
-
-
-    <!-- Features Info List -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-[92%] sm:w-4/5 mt-8">
-      <div class="bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
+      <div class="feature-card bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
         <div class="text-2xl mb-1">🧡</div>
         <h4 class="text-sm font-semibold text-amber-300">भव्य संस्कृती</h4>
         <p class="text-[11px] text-stone-300 mt-1">महाराष्ट्राची प्राचीन लोककला व ढोल ताशाची परंपरा पुढे नेऊया.</p>
       </div>
-      <div class="bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
+      <div class="feature-card bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
         <div class="text-2xl mb-1">🤝</div>
         <h4 class="text-sm font-semibold text-amber-300">एकता व शिस्त</h4>
         <p class="text-[11px] text-stone-300 mt-1">नाद एकच, पण शिस्तबद्ध आणि सुसंस्कृत सादरीकरण.</p>
       </div>
-      <div class="bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
+      <div class="feature-card bg-amber-950/40 p-4 rounded-xl border border-amber-500/20 text-center">
         <div class="text-2xl mb-1">🚩</div>
         <h4 class="text-sm font-semibold text-amber-300">गणेशोत्सव सज्जता</h4>
         <p class="text-[11px] text-stone-300 mt-1">२०२६ च्या भव्य विसर्जन मिरवणुकांचे मुख्य आकर्षण बना.</p>
@@ -380,7 +505,6 @@
 
   </main>
 
-  <!-- Footer Info -->
   <footer class="w-full text-center py-6 px-4 z-10 relative bg-black/40 border-t border-amber-500/10 mt-8">
     <p class="text-xs text-amber-600/80">© २०२६ शिवनाद ढोल पथक. सर्व हक्क राखीव. नाशिक, महाराष्ट्र.</p>
     <div class="flex justify-center space-x-4 mt-2 text-xs text-amber-400">
@@ -470,26 +594,20 @@
     const audioBtn = document.getElementById('audioToggle');
     const playIcon = document.getElementById('playIcon');
     const pauseIcon = document.getElementById('pauseIcon');
-    const vibeBtn = document.getElementById('vibeButton');
-    const vibeBtnText = document.getElementById('vibeBtnText');
 
     function togglePlay() {
       if (!dholEngine.isPlaying) {
         dholEngine.play();
         playIcon.classList.add('hidden');
         pauseIcon.classList.remove('hidden');
-        vibeBtnText.innerText = "थांबा (Pause)";
       } else {
         dholEngine.stop();
         playIcon.classList.remove('hidden');
         pauseIcon.classList.add('hidden');
-        vibeBtnText.innerText = "फील द ढोल!";
       }
     }
 
     audioBtn.addEventListener('click', togglePlay);
-    vibeBtn.addEventListener('click', togglePlay);
-    //  this feat
   </script>
 </body>
 </html>
